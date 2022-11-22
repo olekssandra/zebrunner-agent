@@ -1,0 +1,13 @@
+{
+  "name": "Header verifying",
+  "className": "com.qaprosoft.carina.demo.RozetkaWebTest",
+  "methodName": "testHeaderVerifying",
+  "startedAt": "2022-11-22T10:00:10",
+  "maintainer": "oordak",
+  "labels": [
+    {
+      "key": "feature",
+      "value": "web"
+    }
+  ]
+}

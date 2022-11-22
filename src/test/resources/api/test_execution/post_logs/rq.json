@@ -1,0 +1,17 @@
+[{
+  "testId": "4151",
+  "level": "INFO",
+  "timestamp": "1588866689",
+  "message": "log message 01"
+}, {
+  "testId": "4151",
+  "level": "INFO",
+  "timestamp": "1588866704",
+  "message": "log message 02"
+} ,
+  {
+    "testId": "4151",
+    "level": "INFO",
+    "timestamp": "1588866732",
+    "message": "log message 03"
+  }]

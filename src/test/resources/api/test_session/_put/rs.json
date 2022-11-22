@@ -1,0 +1,15 @@
+{
+  "id": "regex:[\\d]",
+  "initiatedAt": "2022-11-21T10:02:10Z",
+  "startedAt": "2022-11-21T10:02:10Z",
+  "endedAt": "2022-11-21T10:02:16Z",
+  "status": "COMPLETED",
+  "capabilities": {},
+  "desiredCapabilities": {
+    "browserName": "chrome",
+    "platformName": "macos"
+  },
+  "testIds": [
+    "regex:[\\d]"
+  ]
+}
