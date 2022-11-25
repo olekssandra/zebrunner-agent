@@ -20,7 +20,7 @@ public class PutTestExecutionFinishMethod extends BaseApiMethod {
         super("api/test_execution/_put/rq.json", "api/test_execution/_put/rs.json");
         replaceUrlPlaceholder("base_url",  R.CONFIG.get("api_url"));
         replaceUrlPlaceholder("testRunId", testRunId);
-        setHeaders("Authorization=Bearer "+ R.TESTDATA.getDecrypted("auth_token"));
         replaceUrlPlaceholder("testId", testId);
+        setHeaders("Authorization=Bearer "+ R.TESTDATA.getDecrypted("auth_token"));
     }
 }

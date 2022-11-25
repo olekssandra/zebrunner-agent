@@ -30,16 +30,7 @@ public class AuthService {
         ExecutionService executor = new ExecutionService();
         PostTestRunStartMethod testRunStartMethod = new PostTestRunStartMethod();
         executor.expectStatus(testRunStartMethod, HTTPStatusCodeType.OK);
-        String testRunId = JsonPath.from(executor.callApiMethod(testRunStartMethod)).get("id").toString();
-        return testRunId;
-    }
-
-    public static String getTestId() {
-        ExecutionService executor = new ExecutionService();
-        PostTestExecutionStartMethod testExecutionStartMethod = new PostTestExecutionStartMethod();
-        executor.expectStatus(testExecutionStartMethod, HTTPStatusCodeType.OK);
-        testExecutionStartMethod.callAPI();
-        return JsonPath.from(executor.callApiMethod(testExecutionStartMethod)).get("id").toString();
+        return JsonPath.from(executor.callApiMethod(testRunStartMethod)).get("id").toString();
     }
 
     public static String getTestId(String testRunId) {

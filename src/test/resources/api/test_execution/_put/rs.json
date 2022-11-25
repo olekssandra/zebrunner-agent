@@ -3,8 +3,8 @@
   "name": "Header verifying",
   "className": "com.qaprosoft.carina.demo.RozetkaWebTest",
   "methodName": "testHeaderVerifying",
-  "startedAt": "2022-11-22T10:00:10Z",
-  "endedAt": "2022-11-22T10:02:10Z",
+  "startedAt": "2022-11-25T10:00:10Z",
+  "endedAt": "2022-11-25T10:00:30Z",
   "maintainer": "oordak",
   "result": "type:String"
 }

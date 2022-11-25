@@ -1,20 +1,24 @@
 package api;
 
 import api.enums.HTTPStatusCodeType;
+import api.enums.TestStatuses;
 import api.methods.*;
 import io.restassured.path.json.JsonPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.Properties;
 
 public class ConnectionService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private String testRunId;
     private String testId;
-
     private String status;
+    private String testSessionId;
 
     public ConnectionService() {
     }
@@ -51,9 +55,15 @@ public class ConnectionService {
         LOGGER.info(testId);
     }
 
-    public void testExecutionFinish() {
+    public void testExecutionFinish(TestStatuses status) throws IOException {
+        Properties properties = new Properties();
+        properties.put("result", status.getStatusName());
+        String path = "src/test/resources/api/test_execution/_put/test_execution.properties";
+        FileOutputStream outputStrem = new FileOutputStream(path);
+        properties.store(outputStrem, null);
         ExecutionService executor = new ExecutionService();
         PutTestExecutionFinishMethod testExecutionFinishMethod = new PutTestExecutionFinishMethod(testRunId, testId);
+        testExecutionFinishMethod.setProperties(properties);
         executor.expectStatus(testExecutionFinishMethod, HTTPStatusCodeType.OK);
         executor.callApiMethod(testExecutionFinishMethod);
     }
@@ -65,18 +75,53 @@ public class ConnectionService {
         status = JsonPath.from(executor.callApiMethod(testRunExecutionFinishMethod)).get("status").toString();
     }
 
-    public void sendTestExecutionLogs() {
+    public void sendTestExecutionLogs() throws IOException {
+        Properties properties = new Properties();
+        properties.put("testId", testId);
+        String path = "src/test/resources/api/test_execution/post_logs/logs.properties";
+        FileOutputStream outputStrem = new FileOutputStream(path);
+        properties.store(outputStrem, null);
         ExecutionService executor = new ExecutionService();
         PostTestExecutionLogsMethod testExecutionLogsMethod = new PostTestExecutionLogsMethod(testRunId);
+        testExecutionLogsMethod.setProperties(properties);
         executor.expectStatus(testExecutionLogsMethod, HTTPStatusCodeType.ACCEPTED);
         executor.callApiMethod(testExecutionLogsMethod);
     }
 
-    public void startTest() {
+    public void testSessionComplete() throws IOException {
+        Properties properties = new Properties();
+        properties.put("testIds", testId);
+        String path = "src/test/resources/api/test_session/test_session.properties";
+        FileOutputStream outputStrem = new FileOutputStream(path);
+        properties.store(outputStrem, null);
+        ExecutionService executor = new ExecutionService();
+        PostTestSessionCompleteMethod testSessionCompleteMethod = new PostTestSessionCompleteMethod(testRunId);
+        testSessionCompleteMethod.setProperties(properties);
+        executor.expectStatus(testSessionCompleteMethod, HTTPStatusCodeType.OK);
+        testSessionId = JsonPath.from(executor.callApiMethod(testSessionCompleteMethod)).get("id").toString();
+    }
+
+    public void testSessionFinishMethod() throws IOException {
+        Properties properties = new Properties();
+        properties.put("testIds", testId);
+        String path = "src/test/resources/api/test_session/test_session.properties";
+        FileOutputStream outputStrem = new FileOutputStream(path);
+        properties.store(outputStrem, null);
+        ExecutionService executor = new ExecutionService();
+        PutTestSessionFinishMethod testSessionFinishMethod = new PutTestSessionFinishMethod(testRunId, testSessionId);
+        testSessionFinishMethod.setProperties(properties);
+        executor.expectStatus(testSessionFinishMethod, HTTPStatusCodeType.OK);
+        executor.callApiMethod(testSessionFinishMethod);
+    }
+
+    public void startTest(TestStatuses status) throws IOException {
         testRunStart();
         testExecutionStart();
-        testExecutionFinish();
+        sendTestExecutionLogs();
+        testExecutionFinish(status);
         testRunExecutionFinish();
+        testSessionComplete();
+        testSessionFinishMethod();
     }
 
     public void startSkippedTest() {

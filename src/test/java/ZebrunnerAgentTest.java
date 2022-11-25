@@ -5,15 +5,15 @@ import api.enums.TestStatuses;
 import api.methods.PostTestExecutionStartMethod;
 import api.methods.PostTestRunStartMethod;
 import api.methods.PutTestExecutionFinishMethod;
-import com.qaprosoft.carina.core.foundation.crypto.CryptoTool;
-import net.minidev.json.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.Properties;
 
 public class ZebrunnerAgentTest {
 
@@ -41,19 +41,25 @@ public class ZebrunnerAgentTest {
     }
 
     @Test()
-    public void TestExecutionFinishTest() {
+    public void TestExecutionFinishTest() throws IOException {
         LOGGER.info("Test Execution finish");
+        Properties props = new Properties();
+        props.put("result", TestStatuses.PASSED.getStatusName());
+        String path = "src/test/resources/api/test_execution/_put/test_execution.properties";
+        FileOutputStream outputStrem = new FileOutputStream(path);
+        props.store(outputStrem, null);
         ExecutionService executor = new ExecutionService();
         PutTestExecutionFinishMethod testExecutionFinishMethod = new PutTestExecutionFinishMethod();
+        testExecutionFinishMethod.setProperties(props);
         executor.expectStatus(testExecutionFinishMethod, HTTPStatusCodeType.OK);
         executor.callApiMethod(testExecutionFinishMethod);
         testExecutionFinishMethod.validateResponse();
     }
 
     @Test
-    public void successTest() {
+    public void successTest() throws IOException {
         LOGGER.info("Success test started");
-        connectionService.startTest();
+        connectionService.startTest(TestStatuses.PASSED);
         String testStatus = connectionService.getStatus();
         LOGGER.info("Success test finished");
         LOGGER.info(testStatus);
@@ -61,9 +67,9 @@ public class ZebrunnerAgentTest {
     }
 
     @Test
-    public void failTest() {
+    public void failTest() throws IOException {
         LOGGER.info("Failed test started");
-        connectionService.startTest();
+        connectionService.startTest(TestStatuses.FAILED);
         String testStatus = connectionService.getStatus();
         LOGGER.info("Failed test finished");
         LOGGER.info(testStatus);
@@ -71,9 +77,9 @@ public class ZebrunnerAgentTest {
     }
 
     @Test
-    public void skippedTest() {
+    public void skippedTest() throws IOException {
         LOGGER.info("Skipped test started");
-        connectionService.startTest();
+        connectionService.startTest(TestStatuses.SKIPPED);
         String testStatus = connectionService.getStatus();
         LOGGER.info("Skipped test finished");
         LOGGER.info(testStatus);
