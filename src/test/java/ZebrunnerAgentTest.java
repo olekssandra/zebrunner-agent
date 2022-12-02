@@ -1,3 +1,4 @@
+import api.AuthService;
 import api.ConnectionService;
 import api.ExecutionService;
 import api.enums.HTTPStatusCodeType;
@@ -19,6 +20,12 @@ public class ZebrunnerAgentTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     ConnectionService connectionService = new ConnectionService();
+
+    @Test()
+    public void RefreshTokenTest() throws IOException {
+        LOGGER.info("Authentication start");
+        AuthService.refreshAuthToken();
+    }
 
     @Test()
     public void TestRunStartTest() {

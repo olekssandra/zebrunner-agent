@@ -13,7 +13,6 @@ import java.lang.invoke.MethodHandles;
 import java.util.Properties;
 
 public class ConnectionService {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private String testRunId;
     private String testId;
@@ -31,12 +30,36 @@ public class ConnectionService {
         this.testRunId = testRunId;
     }
 
+    public String getTestId() {
+        return testId;
+    }
+
+    public void setTestId(String testId) {
+        this.testId = testId;
+    }
+
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getTestSessionId() {
+        return testSessionId;
+    }
+
+    public void setTestSessionId(String testSessionId) {
+        this.testSessionId = testSessionId;
+    }
+
+    public void refreshToken() {
+        ExecutionService executor = new ExecutionService();
+        PostTestRunStartMethod testRunStartMethod = new PostTestRunStartMethod();
+        executor.expectStatus(testRunStartMethod, HTTPStatusCodeType.OK);
+        testRunId = JsonPath.from(executor.callApiMethod(testRunStartMethod)).get("id").toString();
+        LOGGER.info(testRunId);
     }
 
     public void testRunStart() {
@@ -59,8 +82,8 @@ public class ConnectionService {
         Properties properties = new Properties();
         properties.put("result", status.getStatusName());
         String path = "src/test/resources/api/test_execution/_put/test_execution.properties";
-        FileOutputStream outputStrem = new FileOutputStream(path);
-        properties.store(outputStrem, null);
+        FileOutputStream outputStream = new FileOutputStream(path);
+        properties.store(outputStream, null);
         ExecutionService executor = new ExecutionService();
         PutTestExecutionFinishMethod testExecutionFinishMethod = new PutTestExecutionFinishMethod(testRunId, testId);
         testExecutionFinishMethod.setProperties(properties);
@@ -79,8 +102,8 @@ public class ConnectionService {
         Properties properties = new Properties();
         properties.put("testId", testId);
         String path = "src/test/resources/api/test_execution/post_logs/logs.properties";
-        FileOutputStream outputStrem = new FileOutputStream(path);
-        properties.store(outputStrem, null);
+        FileOutputStream outputStream = new FileOutputStream(path);
+        properties.store(outputStream, null);
         ExecutionService executor = new ExecutionService();
         PostTestExecutionLogsMethod testExecutionLogsMethod = new PostTestExecutionLogsMethod(testRunId);
         testExecutionLogsMethod.setProperties(properties);
@@ -92,8 +115,8 @@ public class ConnectionService {
         Properties properties = new Properties();
         properties.put("testIds", testId);
         String path = "src/test/resources/api/test_session/test_session.properties";
-        FileOutputStream outputStrem = new FileOutputStream(path);
-        properties.store(outputStrem, null);
+        FileOutputStream outputStream = new FileOutputStream(path);
+        properties.store(outputStream, null);
         ExecutionService executor = new ExecutionService();
         PostTestSessionCompleteMethod testSessionCompleteMethod = new PostTestSessionCompleteMethod(testRunId);
         testSessionCompleteMethod.setProperties(properties);
@@ -105,8 +128,8 @@ public class ConnectionService {
         Properties properties = new Properties();
         properties.put("testIds", testId);
         String path = "src/test/resources/api/test_session/test_session.properties";
-        FileOutputStream outputStrem = new FileOutputStream(path);
-        properties.store(outputStrem, null);
+        FileOutputStream outputStream = new FileOutputStream(path);
+        properties.store(outputStream, null);
         ExecutionService executor = new ExecutionService();
         PutTestSessionFinishMethod testSessionFinishMethod = new PutTestSessionFinishMethod(testRunId, testSessionId);
         testSessionFinishMethod.setProperties(properties);
@@ -114,13 +137,21 @@ public class ConnectionService {
         executor.callApiMethod(testSessionFinishMethod);
     }
 
+    public void attachTestExecutionLabels() {
+        ExecutionService executor = new ExecutionService();
+        PutTestExecutionLabelsMethod testExecutionLabelsMethod = new PutTestExecutionLabelsMethod(testRunId, testId);
+        executor.expectStatus(testExecutionLabelsMethod, HTTPStatusCodeType.OK_NO_CONTENT);
+        executor.callApiMethod(testExecutionLabelsMethod);
+    }
+
     public void startTest(TestStatuses status) throws IOException {
         testRunStart();
         testExecutionStart();
         sendTestExecutionLogs();
+        attachTestExecutionLabels();
         testExecutionFinish(status);
-        testRunExecutionFinish();
         testSessionComplete();
+        testRunExecutionFinish();
         testSessionFinishMethod();
     }
 

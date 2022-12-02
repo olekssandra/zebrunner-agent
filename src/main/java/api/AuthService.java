@@ -4,8 +4,12 @@ import api.enums.HTTPStatusCodeType;
 import api.methods.PostAuthenticationMethod;
 import api.methods.PostTestExecutionStartMethod;
 import api.methods.PostTestRunStartMethod;
-import com.qaprosoft.carina.core.foundation.api.http.HttpResponseStatusType;
+import com.qaprosoft.carina.core.foundation.crypto.CryptoTool;
 import io.restassured.path.json.JsonPath;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 public class AuthService {
 
@@ -19,11 +23,19 @@ public class AuthService {
         AuthService.authToken = authToken;
     }
 
-    public static void refreshAuthToken() {
-        PostAuthenticationMethod postAuthTokenMethod = new PostAuthenticationMethod();
-        postAuthTokenMethod.expectResponseStatus(HttpResponseStatusType.OK_200);
-        postAuthTokenMethod.callAPI();
-        authToken = JsonPath.from("src/test/resources/api/authentication/_post/rs.json").get("authToken");
+    public static void refreshAuthToken() throws IOException {
+        ExecutionService executor = new ExecutionService();
+        PostAuthenticationMethod authenticationMethod = new PostAuthenticationMethod();
+        executor.expectStatus(authenticationMethod, HTTPStatusCodeType.OK);
+        authToken = JsonPath.from(executor.callApiMethod(authenticationMethod)).get("authToken").toString();
+        authenticationMethod.validateResponse();
+        Properties properties = new Properties();
+        CryptoTool cryptoTool = new CryptoTool();
+        String str = cryptoTool.encrypt(authToken);
+        properties.put("auth_token", "{crypt:" + str + "}");
+        String path = "src/main/resources/_testdata.properties";
+        FileOutputStream outputStream = new FileOutputStream(path);
+        properties.store(outputStream, null);
     }
 
     public static String getTestRunId() {

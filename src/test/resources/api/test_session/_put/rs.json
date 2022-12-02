@@ -1,8 +1,8 @@
 {
   "id": "regex:[\\d]",
-  "initiatedAt": "2022-11-25T10:00:30Z",
-  "startedAt": "2022-11-25T10:00:30Z",
-  "endedAt": "2022-11-25T10:00:50Z",
+  "initiatedAt": "2022-12-02T09:00:10Z",
+  "startedAt": "2022-12-02T09:00:20Z",
+  "endedAt": "2022-12-02T09:00:41Z",
   "status": "COMPLETED",
   "capabilities": {},
   "desiredCapabilities": {

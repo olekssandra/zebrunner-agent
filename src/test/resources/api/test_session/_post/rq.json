@@ -1,6 +1,6 @@
 {
-  "initiatedAt": "2022-11-25T10:00:30Z",
-  "startedAt": "2022-11-25T10:00:30Z",
+  "initiatedAt": "2022-12-02T09:00:10Z",
+  "startedAt": "2022-12-02T09:00:20Z",
   "status": "COMPLETED",
   "desiredCapabilities": {
     "browserName": "chrome",

@@ -30,7 +30,7 @@
     }
   ],
   "authTokenType": "Bearer",
-  "authToken": "skip",
+  "authToken": "type:String",
   "authTokenExpirationInSecs": "regex:[\\d]",
   "refreshToken": "skip",
   "tenantName": "solvdinternal"
