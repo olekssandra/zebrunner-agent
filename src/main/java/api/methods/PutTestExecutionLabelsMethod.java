@@ -8,6 +8,5 @@ public class PutTestExecutionLabelsMethod extends BaseApiMethod {
         replaceUrlPlaceholder("base_url",  R.CONFIG.get("api_url"));
         replaceUrlPlaceholder("testRunId", testRunId);
         replaceUrlPlaceholder("testId", testId);
-        setHeaders("Authorization=Bearer "+ R.TESTDATA.getDecrypted("auth_token"));
     }
 }

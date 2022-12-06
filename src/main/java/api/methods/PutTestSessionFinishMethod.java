@@ -8,7 +8,6 @@ public class PutTestSessionFinishMethod extends BaseApiMethod {
         replaceUrlPlaceholder("base_url", R.CONFIG.get("api_url"));
         replaceUrlPlaceholder("testRunId", testRunId);
         replaceUrlPlaceholder("testSessionId", testSessionId);
-        setHeaders("Authorization=Bearer " + R.TESTDATA.getDecrypted("auth_token"));
     }
 
 }

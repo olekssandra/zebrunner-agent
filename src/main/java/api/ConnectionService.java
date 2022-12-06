@@ -3,7 +3,6 @@ package api;
 import api.enums.HTTPStatusCodeType;
 import api.enums.TestStatuses;
 import api.methods.*;
-import io.restassured.path.json.JsonPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +57,7 @@ public class ConnectionService {
         ExecutionService executor = new ExecutionService();
         PostTestRunStartMethod testRunStartMethod = new PostTestRunStartMethod();
         executor.expectStatus(testRunStartMethod, HTTPStatusCodeType.OK);
-        testRunId = JsonPath.from(executor.callApiMethod(testRunStartMethod)).get("id").toString();
+        testRunId = ResponseService.readId(executor.callApiMethod(testRunStartMethod));
         LOGGER.info(testRunId);
     }
 
@@ -66,7 +65,7 @@ public class ConnectionService {
         ExecutionService executor = new ExecutionService();
         PostTestRunStartMethod testRunStartMethod = new PostTestRunStartMethod();
         executor.expectStatus(testRunStartMethod, HTTPStatusCodeType.OK);
-        testRunId = JsonPath.from(executor.callApiMethod(testRunStartMethod)).get("id").toString();
+        testRunId = ResponseService.readId(executor.callApiMethod(testRunStartMethod));
         LOGGER.info(testRunId);
     }
 
@@ -74,13 +73,13 @@ public class ConnectionService {
         ExecutionService executor = new ExecutionService();
         PostTestExecutionStartMethod testExecutionStartMethod = new PostTestExecutionStartMethod(testRunId);
         executor.expectStatus(testExecutionStartMethod, HTTPStatusCodeType.OK);
-        testId = JsonPath.from(executor.callApiMethod(testExecutionStartMethod)).get("id").toString();
+        testId = ResponseService.readId(executor.callApiMethod(testExecutionStartMethod));
         LOGGER.info(testId);
     }
 
     public void testExecutionFinish(TestStatuses status) throws IOException {
         Properties properties = new Properties();
-        properties.put("result", status.getStatusName());
+        properties.put(JsonConstant.TEST_RESULT, status.getStatusName());
         String path = "src/test/resources/api/test_execution/_put/test_execution.properties";
         FileOutputStream outputStream = new FileOutputStream(path);
         properties.store(outputStream, null);
@@ -95,12 +94,12 @@ public class ConnectionService {
         ExecutionService executor = new ExecutionService();
         PutTestRunExecutionFinishMethod testRunExecutionFinishMethod = new PutTestRunExecutionFinishMethod(testRunId);
         executor.expectStatus(testRunExecutionFinishMethod, HTTPStatusCodeType.OK);
-        status = JsonPath.from(executor.callApiMethod(testRunExecutionFinishMethod)).get("status").toString();
+        status = ResponseService.readTestStatus(executor.callApiMethod(testRunExecutionFinishMethod));
     }
 
     public void sendTestExecutionLogs() throws IOException {
         Properties properties = new Properties();
-        properties.put("testId", testId);
+        properties.put(JsonConstant.TEST_ID, testId);
         String path = "src/test/resources/api/test_execution/post_logs/logs.properties";
         FileOutputStream outputStream = new FileOutputStream(path);
         properties.store(outputStream, null);
@@ -113,7 +112,7 @@ public class ConnectionService {
 
     public void testSessionComplete() throws IOException {
         Properties properties = new Properties();
-        properties.put("testIds", testId);
+        properties.put(JsonConstant.TEST_IDS, testId);
         String path = "src/test/resources/api/test_session/test_session.properties";
         FileOutputStream outputStream = new FileOutputStream(path);
         properties.store(outputStream, null);
@@ -121,12 +120,12 @@ public class ConnectionService {
         PostTestSessionCompleteMethod testSessionCompleteMethod = new PostTestSessionCompleteMethod(testRunId);
         testSessionCompleteMethod.setProperties(properties);
         executor.expectStatus(testSessionCompleteMethod, HTTPStatusCodeType.OK);
-        testSessionId = JsonPath.from(executor.callApiMethod(testSessionCompleteMethod)).get("id").toString();
+        testSessionId = ResponseService.readId(executor.callApiMethod(testSessionCompleteMethod));
     }
 
     public void testSessionFinishMethod() throws IOException {
         Properties properties = new Properties();
-        properties.put("testIds", testId);
+        properties.put(JsonConstant.TEST_IDS, testId);
         String path = "src/test/resources/api/test_session/test_session.properties";
         FileOutputStream outputStream = new FileOutputStream(path);
         properties.store(outputStream, null);
@@ -153,11 +152,5 @@ public class ConnectionService {
         testSessionComplete();
         testRunExecutionFinish();
         testSessionFinishMethod();
-    }
-
-    public void startSkippedTest() {
-        testRunStart();
-        testExecutionStart();
-        testRunExecutionFinish();
     }
 }

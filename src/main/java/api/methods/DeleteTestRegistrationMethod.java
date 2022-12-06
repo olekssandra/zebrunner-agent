@@ -10,6 +10,5 @@ public class DeleteTestRegistrationMethod extends BaseApiMethod {
         String testRunId=AuthService.getTestRunId();
         replaceUrlPlaceholder("testRunId", testRunId);
         replaceUrlPlaceholder("testId", AuthService.getTestId(testRunId));
-        setHeaders("Authorization=Bearer "+ R.TESTDATA.getDecrypted("auth_token"));
     }
 }

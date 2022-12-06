@@ -10,6 +10,5 @@ public class PostTestExecutionLogsMethod extends BaseApiMethod {
         super("api/test_execution/post_logs/rq.json", "api/test_execution/post_logs/rs.json");
         replaceUrlPlaceholder("base_url",  R.CONFIG.get("api_url"));
         replaceUrlPlaceholder("testRunId", testRunId);
-        setHeaders("Authorization=Bearer "+ R.TESTDATA.getDecrypted("auth_token"));
     }
 }

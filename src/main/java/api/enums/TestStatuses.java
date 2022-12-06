@@ -2,7 +2,7 @@ package api.enums;
 
 public enum TestStatuses {
 
-    IN_PROGRESS("IN PROGRESS"),
+    IN_PROGRESS("IN_PROGRESS"),
     PASSED("PASSED"),
     FAILED("FAILED"),
     SKIPPED("SKIPPED"),

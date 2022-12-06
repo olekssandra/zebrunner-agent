@@ -13,7 +13,6 @@ public class PutTestExecutionFinishMethod extends BaseApiMethod {
         String testRunId=AuthService.getTestRunId();
         replaceUrlPlaceholder("testRunId", testRunId);
         replaceUrlPlaceholder("testId", AuthService.getTestId(testRunId));
-        setHeaders("Authorization=Bearer "+ R.TESTDATA.getDecrypted("auth_token"));
     }
 
     public PutTestExecutionFinishMethod(String testRunId, String testId) {
@@ -21,6 +20,5 @@ public class PutTestExecutionFinishMethod extends BaseApiMethod {
         replaceUrlPlaceholder("base_url",  R.CONFIG.get("api_url"));
         replaceUrlPlaceholder("testRunId", testRunId);
         replaceUrlPlaceholder("testId", testId);
-        setHeaders("Authorization=Bearer "+ R.TESTDATA.getDecrypted("auth_token"));
     }
 }

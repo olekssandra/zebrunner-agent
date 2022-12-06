@@ -1,6 +1,4 @@
-import api.AuthService;
-import api.ConnectionService;
-import api.ExecutionService;
+import api.*;
 import api.enums.HTTPStatusCodeType;
 import api.enums.TestStatuses;
 import api.methods.PostTestExecutionStartMethod;
@@ -22,36 +20,38 @@ public class ZebrunnerAgentTest {
     ConnectionService connectionService = new ConnectionService();
 
     @Test()
-    public void RefreshTokenTest() throws IOException {
+    public void refreshTokenTest() throws IOException {
         LOGGER.info("Authentication start");
         AuthService.refreshAuthToken();
     }
 
     @Test()
-    public void TestRunStartTest() {
+    public void testRunStartTest() {
         LOGGER.info("Test Run start");
         ExecutionService executor = new ExecutionService();
         PostTestRunStartMethod testRunStartMethod = new PostTestRunStartMethod();
         executor.expectStatus(testRunStartMethod, HTTPStatusCodeType.OK);
-        executor.callApiMethod(testRunStartMethod);
+        String testStatus = ResponseService.readTestStatus(executor.callApiMethod(testRunStartMethod));
         testRunStartMethod.validateResponse();
+        Assert.assertTrue(testStatus.equalsIgnoreCase(TestStatuses.IN_PROGRESS.getStatusName()), "Actual test status differs from the expected one");
     }
 
     @Test()
-    public void TestExecutionStartTest() {
+    public void testExecutionStartTest() {
         LOGGER.info("Test Execution start");
         ExecutionService executor = new ExecutionService();
         PostTestExecutionStartMethod testExecutionStartMethod = new PostTestExecutionStartMethod();
         executor.expectStatus(testExecutionStartMethod, HTTPStatusCodeType.OK);
-        executor.callApiMethod(testExecutionStartMethod);
+        String result = ResponseService.readResult(executor.callApiMethod(testExecutionStartMethod));
         testExecutionStartMethod.validateResponse();
+        Assert.assertTrue(result.equalsIgnoreCase(TestStatuses.IN_PROGRESS.getStatusName()), "Actual test result differs from the expected one");
     }
 
     @Test()
-    public void TestExecutionFinishTest() throws IOException {
+    public void testExecutionFinishTest() throws IOException {
         LOGGER.info("Test Execution finish");
         Properties props = new Properties();
-        props.put("result", TestStatuses.PASSED.getStatusName());
+        props.put(JsonConstant.TEST_RESULT, TestStatuses.PASSED.getStatusName());
         String path = "src/test/resources/api/test_execution/_put/test_execution.properties";
         FileOutputStream outputStrem = new FileOutputStream(path);
         props.store(outputStrem, null);
@@ -59,8 +59,9 @@ public class ZebrunnerAgentTest {
         PutTestExecutionFinishMethod testExecutionFinishMethod = new PutTestExecutionFinishMethod();
         testExecutionFinishMethod.setProperties(props);
         executor.expectStatus(testExecutionFinishMethod, HTTPStatusCodeType.OK);
-        executor.callApiMethod(testExecutionFinishMethod);
+        String result = ResponseService.readResult(executor.callApiMethod(testExecutionFinishMethod));
         testExecutionFinishMethod.validateResponse();
+        Assert.assertTrue(result.equalsIgnoreCase(TestStatuses.PASSED.getStatusName()), "Actual test result differs from the expected one");
     }
 
     @Test
