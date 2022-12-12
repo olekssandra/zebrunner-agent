@@ -1,6 +1,5 @@
 package api.methods;
 
-import api.AuthService;
 import com.qaprosoft.carina.core.foundation.utils.R;
 
 public class PutTestRunExecutionFinishMethod extends BaseApiMethod {

@@ -1,9 +1,6 @@
 package api.methods;
 
-import api.AuthService;
 import com.qaprosoft.carina.core.foundation.utils.R;
-
-import java.util.Properties;
 
 public class PostTestExecutionLogsMethod extends BaseApiMethod {
     public PostTestExecutionLogsMethod(String testRunId) {

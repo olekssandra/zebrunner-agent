@@ -9,5 +9,4 @@ public class PutTestSessionFinishMethod extends BaseApiMethod {
         replaceUrlPlaceholder("testRunId", testRunId);
         replaceUrlPlaceholder("testSessionId", testSessionId);
     }
-
 }

@@ -4,11 +4,8 @@ import api.enums.HTTPStatusCodeType;
 import api.methods.PostAuthenticationMethod;
 import api.methods.PostTestExecutionStartMethod;
 import api.methods.PostTestRunStartMethod;
-import com.qaprosoft.carina.core.foundation.crypto.CryptoTool;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Properties;
 
 public class AuthService {
 
@@ -27,13 +24,6 @@ public class AuthService {
         PostAuthenticationMethod authenticationMethod = new PostAuthenticationMethod();
         executor.expectStatus(authenticationMethod, HTTPStatusCodeType.OK);
         authToken = ResponseService.readAuthToken(executor.callApiMethod(authenticationMethod));
-        authenticationMethod.validateResponse();
-        Properties properties = new Properties();
-        CryptoTool cryptoTool = new CryptoTool();
-        String str = cryptoTool.encrypt(authToken);
-        properties.put(JsonConstant.AUTH_TOKEN, "{crypt:" + str + "}");
-        FileOutputStream outputStream = new FileOutputStream("src/main/resources/_testdata.properties");
-        properties.store(outputStream, null);
     }
 
     public static String getTestRunId() {

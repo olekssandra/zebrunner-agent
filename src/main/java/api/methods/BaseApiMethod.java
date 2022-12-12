@@ -1,8 +1,7 @@
 package api.methods;
 
-import api.JsonConstant;
+import api.AuthService;
 import com.qaprosoft.carina.core.foundation.api.AbstractApiMethodV2;
-import com.qaprosoft.carina.core.foundation.utils.R;
 
 import java.util.Properties;
 
@@ -23,6 +22,6 @@ public abstract class BaseApiMethod extends AbstractApiMethodV2 {
     }
 
     private void setAuth() {
-        setHeaders("Authorization=Bearer "+ R.TESTDATA.getDecrypted(JsonConstant.AUTH_TOKEN));
+        setHeaders("Authorization=Bearer " + AuthService.getAuthToken());
     }
 }

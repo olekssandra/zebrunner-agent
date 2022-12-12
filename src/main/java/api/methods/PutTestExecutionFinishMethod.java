@@ -1,10 +1,7 @@
 package api.methods;
 
 import api.AuthService;
-import api.enums.TestStatuses;
 import com.qaprosoft.carina.core.foundation.utils.R;
-
-import java.util.Properties;
 
 public class PutTestExecutionFinishMethod extends BaseApiMethod {
     public PutTestExecutionFinishMethod() {
