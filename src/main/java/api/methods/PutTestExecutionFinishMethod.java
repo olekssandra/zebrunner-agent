@@ -12,10 +12,11 @@ public class PutTestExecutionFinishMethod extends BaseApiMethod {
         replaceUrlPlaceholder("testId", AuthService.getTestId(testRunId));
     }
 
-    public PutTestExecutionFinishMethod(String testRunId, String testId) {
+    public PutTestExecutionFinishMethod(String testRunId, String testId, String result) {
         super("api/test_execution/_put/rq.json", "api/test_execution/_put/rs.json");
         replaceUrlPlaceholder("base_url",  R.CONFIG.get("api_url"));
         replaceUrlPlaceholder("testRunId", testRunId);
         replaceUrlPlaceholder("testId", testId);
+        addProperty("result", result);
     }
 }
