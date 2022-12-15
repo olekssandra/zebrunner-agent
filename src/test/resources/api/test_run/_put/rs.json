@@ -3,7 +3,7 @@
   "uuid": "type:String",
   "name": "Carina Demo Tests - Rozetka Web",
   "status": "type:String",
-  "startedAt": "2022-12-13T09:00:10Z",
-  "endedAt": "2022-12-13T09:00:40Z",
+  "startedAt": "2022-12-15T09:00:10Z",
+  "endedAt": "2022-12-15T09:00:40Z",
   "framework": "testng"
 }

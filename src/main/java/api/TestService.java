@@ -18,8 +18,11 @@ public class TestService {
         PostTestRunStartMethod testRunStartMethod = new PostTestRunStartMethod();
         executor.expectStatus(testRunStartMethod, HTTPStatusCodeType.OK);
         String rs = executor.callApiMethod(testRunStartMethod);
-        ReportingService.getInstance().setTestRunId(ResponseService.readId(rs));
-        ReportingService.getInstance().setTestRunResult(ResponseService.readTestStatus(rs));
+        ResponseService responseService = new ResponseService();
+        responseService.setId(rs);
+        ReportingService.getInstance().setTestRunId(responseService.getId());
+        responseService.setTestStatus(rs);
+        ReportingService.getInstance().setTestRunResult(responseService.getTestStatus());
         testRunStartMethod.validateResponse();
     }
 
@@ -29,8 +32,11 @@ public class TestService {
                 new PostTestExecutionStartMethod(ReportingService.getInstance().getTestRunId());
         executor.expectStatus(testExecutionStartMethod, HTTPStatusCodeType.OK);
         String rs = executor.callApiMethod(testExecutionStartMethod);
-        ReportingService.getInstance().setTestId(ResponseService.readId(rs));
-        ReportingService.getInstance().setTestExecutionResult(ResponseService.readResult(rs));
+        ResponseService responseService = new ResponseService();
+        responseService.setId(rs);
+        ReportingService.getInstance().setTestId(responseService.getId());
+        responseService.setResult(rs);
+        ReportingService.getInstance().setTestExecutionResult(responseService.getResult());
         testExecutionStartMethod.validateResponse();
     }
 
@@ -39,7 +45,9 @@ public class TestService {
         PutTestExecutionFinishMethod testExecutionFinishMethod = new PutTestExecutionFinishMethod(ReportingService
                 .getInstance().getTestRunId(), ReportingService.getInstance().getTestId(), testStatus.getStatusName());
         executor.expectStatus(testExecutionFinishMethod, HTTPStatusCodeType.OK);
-        ReportingService.getInstance().setTestExecutionResult(ResponseService.readResult(executor.callApiMethod(testExecutionFinishMethod)));
+        ResponseService responseService = new ResponseService();
+        responseService.setResult(executor.callApiMethod(testExecutionFinishMethod));
+        ReportingService.getInstance().setTestExecutionResult(responseService.getResult());
         testExecutionFinishMethod.validateResponse();
     }
 
@@ -48,31 +56,36 @@ public class TestService {
         PutTestRunExecutionFinishMethod testRunExecutionFinishMethod =
                 new PutTestRunExecutionFinishMethod(ReportingService.getInstance().getTestRunId());
         executor.expectStatus(testRunExecutionFinishMethod, HTTPStatusCodeType.OK);
-        ReportingService.getInstance().setStatus(ResponseService.readTestStatus(executor.callApiMethod(testRunExecutionFinishMethod)));
+        ResponseService responseService = new ResponseService();
+        responseService.setTestStatus(executor.callApiMethod(testRunExecutionFinishMethod));
+        ReportingService.getInstance().setStatus(responseService.getTestStatus());
         testRunExecutionFinishMethod.validateResponse();
     }
 
     public static void sendTestExecutionLogs() {
         ExecutionService executor = new ExecutionService();
         PostTestExecutionLogsMethod testExecutionLogsMethod =
-                new PostTestExecutionLogsMethod(ReportingService.getInstance().getTestRunId());
+                new PostTestExecutionLogsMethod(ReportingService.getInstance().getTestRunId(), ReportingService
+                        .getInstance().getTestId());
         executor.expectStatus(testExecutionLogsMethod, HTTPStatusCodeType.ACCEPTED);
         executor.callApiMethod(testExecutionLogsMethod);
     }
 
     public static void testSessionComplete() {
         ExecutionService executor = new ExecutionService();
-        PostTestSessionCompleteMethod testSessionCompleteMethod =
-                new PostTestSessionCompleteMethod(ReportingService.getInstance().getTestRunId());
+        PostTestSessionCompleteMethod testSessionCompleteMethod = new PostTestSessionCompleteMethod(ReportingService
+                .getInstance().getTestRunId(), ReportingService.getInstance().getTestId());
         executor.expectStatus(testSessionCompleteMethod, HTTPStatusCodeType.OK);
-        ReportingService.getInstance().setTestSessionId(ResponseService.readId(executor.callApiMethod(testSessionCompleteMethod)));
+        ResponseService responseService = new ResponseService();
+        responseService.setId(executor.callApiMethod(testSessionCompleteMethod));
+        ReportingService.getInstance().setTestSessionId(responseService.getId());
         testSessionCompleteMethod.validateResponse();
     }
 
     public static void testSessionFinishMethod() {
         ExecutionService executor = new ExecutionService();
-        PutTestSessionFinishMethod testSessionFinishMethod = new PutTestSessionFinishMethod(ReportingService
-                .getInstance().getTestRunId(), ReportingService.getInstance().getTestSessionId());
+        PutTestSessionFinishMethod testSessionFinishMethod = new PutTestSessionFinishMethod(ReportingService.getInstance()
+                .getTestRunId(), ReportingService.getInstance().getTestSessionId(), ReportingService.getInstance().getTestId());
         executor.expectStatus(testSessionFinishMethod, HTTPStatusCodeType.OK);
         executor.callApiMethod(testSessionFinishMethod);
         testSessionFinishMethod.validateResponse();

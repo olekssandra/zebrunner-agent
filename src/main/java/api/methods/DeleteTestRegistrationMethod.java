@@ -1,14 +1,13 @@
 package api.methods;
 
-import api.AuthService;
+import api.ReportingService;
 import com.qaprosoft.carina.core.foundation.utils.R;
 
 public class DeleteTestRegistrationMethod extends BaseApiMethod {
-    public DeleteTestRegistrationMethod() {
+    public DeleteTestRegistrationMethod(String testRunId, String testId) {
         super(null, null);
-        replaceUrlPlaceholder("base_url",  R.CONFIG.get("api_url"));
-        String testRunId=AuthService.getTestRunId();
+        replaceUrlPlaceholder("base_url", R.CONFIG.get("api_url"));
         replaceUrlPlaceholder("testRunId", testRunId);
-        replaceUrlPlaceholder("testId", AuthService.getTestId(testRunId));
+        replaceUrlPlaceholder("testId", testId);
     }
 }
