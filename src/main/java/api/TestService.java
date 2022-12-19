@@ -6,7 +6,6 @@ import api.methods.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 public class TestService {
@@ -99,7 +98,7 @@ public class TestService {
         executor.callApiMethod(testExecutionLabelsMethod);
     }
 
-    public static void startTest(TestStatuses testStatus) throws IOException {
+    public static void startTest(TestStatuses testStatus) {
         AuthService.refreshAuthToken();
         testRunStart();
         testExecutionStart();

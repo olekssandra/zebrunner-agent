@@ -2,8 +2,7 @@ package api;
 
 import api.enums.HTTPStatusCodeType;
 import api.methods.PostAuthenticationMethod;
-
-import java.io.IOException;
+import io.restassured.path.json.JsonPath;
 
 public class AuthService {
 
@@ -13,16 +12,15 @@ public class AuthService {
         return authToken;
     }
 
-    public void setAuthToken(String authToken) {
-        AuthService.authToken = authToken;
+    public void setAuthToken(String response) {
+        this.authToken = JsonPath.from(response).get(JsonConstant.AUTH_TOKEN).toString();
     }
 
-    public static void refreshAuthToken() throws IOException {
+    public static void refreshAuthToken() {
         ExecutionService executor = new ExecutionService();
         PostAuthenticationMethod authenticationMethod = new PostAuthenticationMethod();
         executor.expectStatus(authenticationMethod, HTTPStatusCodeType.OK);
-        ResponseService responseService = new ResponseService();
-        responseService.setAuthToken(executor.callApiMethod(authenticationMethod));
-        authToken = responseService.getAuthToken();
+        AuthService authService = new AuthService();
+        authService.setAuthToken(executor.callApiMethod(authenticationMethod));
     }
 }

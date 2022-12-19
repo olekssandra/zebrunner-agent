@@ -3,20 +3,11 @@ package api;
 import io.restassured.path.json.JsonPath;
 
 public class ResponseService {
-    private String authToken;
     private String id;
     private String testStatus;
     private String result;
 
     public ResponseService() {
-    }
-
-    public String getAuthToken() {
-        return authToken;
-    }
-
-    public void setAuthToken(String response) {
-        this.authToken = JsonPath.from(response).get(JsonConstant.AUTH_TOKEN).toString();
     }
 
     public String getId() {
