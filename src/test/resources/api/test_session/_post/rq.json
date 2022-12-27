@@ -1,0 +1,12 @@
+{
+  "initiatedAt": "2022-12-23T09:00:10Z",
+  "startedAt": "2022-12-23T09:00:20Z",
+  "status": "COMPLETED",
+  "desiredCapabilities": {
+    "browserName": "chrome",
+    "platformName":"macos"
+  },
+  "testIds": [
+    "${testIds}"
+  ]
+}

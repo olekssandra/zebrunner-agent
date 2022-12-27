@@ -1,0 +1,37 @@
+{
+  "userId": "regex:[\\d]",
+  "permissionsSuperset": [
+    "reporting:stacktrace-labels:assign"
+  ],
+  "projectAssignments": [
+    {
+      "projectId": "regex:[\\d]",
+      "role": "GUEST"
+    },
+    {
+      "projectId": "regex:[\\d]",
+      "role": "GUEST"
+    },
+    {
+      "projectId": "regex:[\\d]",
+      "role": "GUEST"
+    },
+    {
+      "projectId": "regex:[\\d]",
+      "role": "GUEST"
+    },
+    {
+      "projectId": "regex:[\\d]",
+      "role": "GUEST"
+    },
+    {
+      "projectId": "regex:[\\d]",
+      "role": "ENGINEER"
+    }
+  ],
+  "authTokenType": "Bearer",
+  "authToken": "type:String",
+  "authTokenExpirationInSecs": "regex:[\\d]",
+  "refreshToken": "skip",
+  "tenantName": "solvdinternal"
+}

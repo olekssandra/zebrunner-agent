@@ -1,0 +1,8 @@
+{
+  "id": "regex:[\\d]",
+  "uuid": "type:String",
+  "name": "Carina Demo Tests - Rozetka Web",
+  "status": "IN_PROGRESS",
+  "startedAt": "2022-12-23T09:00:10Z",
+  "framework": "testng"
+}
